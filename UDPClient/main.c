@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <sys/un.h>
 #include <complex.h>
+#include <argp.h>
 #include "graphicslibrary.h"
 
 #define PORT	 8080
@@ -184,16 +185,81 @@ void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_numb
     // this could return the populated rgb image..
 }
 
+/*
+ *
+ *
+ * ARGP AND MAIN BELOW THIS SECTION...
+ *
+ *
+ *
+ */
+
+
+
+/* Used by main to communicate with parse_opt. */
+static struct arguments
+{
+    char *arg1;                   /* arg1 */
+    char **strings;               /* [string…] */
+    double center;
+    double scale;      /* vals of args*/
+};
+
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+
+    /* Get the input argument from argp_parse, which we
+       know is a pointer to our arguments structure. */
+    struct arguments *arguments = state->input;
+    switch (key)
+    {
+        // Memory allocated to copy over arg without the '=' sign.
+        char centDest[5],scaleDest[5];
+        case 'c':
+            memcpy( centDest, &arg[1], 5 );
+            arguments->center = atof(centDest);
+            break;
+        case 's':
+            memcpy( scaleDest, &arg[1], 5 );
+            arguments->scale = atof(scaleDest);
+            break;
+        case ARGP_KEY_NO_ARGS:
+            break;
+        case ARGP_KEY_ARG:
+            arguments->arg1 = arg;
+            arguments->strings = &state->argv[state->next];
+            state->next = state->argc;
+            break;
+        default:
+            return ARGP_ERR_UNKNOWN;
+    }
+    return 0;
+}
+
 double mandelbrot_scale = 1.0;
 double mandelbrot_imaginary_center = 0.0;
 double mandelbrot_real_center = 0.0;
+struct argp_option options[] =     {
+        { "real", 'r', "NUM", OPTION_ARG_OPTIONAL,
+          "real center"},
+        { "scale", 's', "NUM", OPTION_ARG_OPTIONAL,
+          "scale"},
+        { 0 }
+};
+struct argp argp = { options, parse_opt, 0, 0 };
 
 // Driver code
-int main() {
+int main(int argc, char **argv) {
     int sockfd;
     char buffer[MAXLINE];
     char *hello = "No";
     struct sockaddr_in	 servaddr;
+    struct arguments arguments;
+
+    arguments.scale=1;
+    arguments.center=0.2;
+    argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     // Creating socket file descriptor
     if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -228,10 +294,7 @@ int main() {
     send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,10,center,2.0,16,16,image_size);
     await_responses(sockfd, rqst_pkt,64*4,image_size);
 
-
-
-
-
     close(sockfd);
+
     return 0;
 }
