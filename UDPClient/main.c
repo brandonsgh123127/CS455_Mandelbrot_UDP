@@ -298,12 +298,13 @@ int main(int argc, char **argv) {
     //TODO- WHENEVER SWITCHING UDP TYPE, CHANGE FROM INET to UXDS
     send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,arguments.center,arguments.scale,16,16,image_size,buffer);
     rgb_image_t  *image = await_responses(sockfd, rqst_pkt,256,image_size);
-    close(sockfd);
     if (isatty(fileno(stdout))) {
         write_rgb_file("test.ppm",image);
     }else {
         write_rgb_pipe(image);
     }
+    close(sockfd);
+
     free_rgb_image(image);
     return 0;
 }
