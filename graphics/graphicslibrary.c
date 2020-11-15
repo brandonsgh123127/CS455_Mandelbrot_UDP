@@ -114,6 +114,25 @@ rgb_image_t *read_ppm_rgb_mandy(){
 
 }
 
+rgb_image_t *read_ppm_rgb_client(){
+
+    rgb_image_t *image;
+    extern double mandelbrot_scale;
+    extern double mandelbrot_real_center;
+    char command[256+1]; // ASCIIZ is string\0
+    sprintf(command,
+            "~/CLionProjects/UDPClient/cmake-build-debug/UDPClient -r%f -s%f",
+            mandelbrot_real_center,
+            1.0*mandelbrot_scale);
+    FILE *fp = popen(command, "r");
+    image = get_ppm(fp);
+
+    pclose(fp);
+
+    return image;
+
+}
+
 #define PPMREADBUFLEN 1024
 rgb_image_t * get_ppm(FILE *pf)
 {
