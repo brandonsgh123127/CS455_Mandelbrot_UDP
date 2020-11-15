@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     double complex center = re+im*1.0i;
 
     rgb_image_t * image=calculate_mandelbrot(center,scale,512,100);
-
+//    rgb_image_t *image= calculate_mandelbrot2(-1,4,3,8,512);
 
     if (isatty(fileno(stdout))) {
         write_rgb_file("Mandy.ppm", image);
