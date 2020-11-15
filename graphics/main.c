@@ -48,7 +48,7 @@ int main () {
         /*REFORMATTING FOR USE WITH CLIENT AND HOST SERVER*/
          //image = read_ppm_rgb_mandy();
 
-        (mouse_event.button==mouse_left_button)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_forward)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_backward)?image=gen_ppm_rgb_client():perror("Unable to open client!");
+        (mouse_event.button==mouse_left_button)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_forward)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_backward)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_right_button)?image=gen_ppm_rgb_client():perror("Unable to open client!");
 
         display_image(image);
         //write_rgb_file("Mandy.ppm", image);

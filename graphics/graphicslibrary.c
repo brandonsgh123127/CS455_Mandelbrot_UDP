@@ -119,15 +119,16 @@ rgb_image_t *gen_ppm_rgb_client(){
     rgb_image_t *image;
     extern double mandelbrot_scale;
     extern double mandelbrot_real_center;
+    extern double mandelbrot_imaginary_center;
     char command[256+1]; // ASCIIZ is string\0
     sprintf(command,
-            "~/CLionProjects/UDPClient/cmake-build-debug/UDPClient -c=%f -s=%f",
+            "~/CLionProjects/UDPClient/cmake-build-debug/UDPClient -r%f -i%f -s%f",
             mandelbrot_real_center,
+            mandelbrot_imaginary_center,
             1.0*mandelbrot_scale);
     FILE *fp = popen(command, "r");
     image = get_ppm(fp);
     pclose(fp);
-    //return read_ppm_rgb_file("/home/spada/CLionProjects/UDPClient/cmake-build-debug/test.ppm");
     return image;
 
 }

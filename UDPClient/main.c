@@ -76,7 +76,7 @@ int open_uxds_server_socket(char * uxds_udp_server_path, struct rqst_udp_pkt * r
     (* (* rqst_pkt).uxds_cliaddr).sun_family = AF_UNIX;
     strcpy((* (* rqst_pkt).uxds_cliaddr).sun_path, "/tmp/UDSDGCLNT");  // This might be best to pass in
 
-    printf("%s\n",(* (* rqst_pkt).uxds_cliaddr).sun_path);
+    //printf("%s\n",(* (* rqst_pkt).uxds_cliaddr).sun_path);
     unlink((* (* rqst_pkt).uxds_cliaddr).sun_path);
     if(bind(socket_fd, (const struct sockaddr *) (* rqst_pkt).uxds_cliaddr,
             sizeof(struct sockaddr_un)) < 0)
@@ -119,16 +119,15 @@ void send_requests(int sockfd,const struct sockaddr * svraddr,
 
             imaginary_offset = start_imaginary + i_counter * delta_imaginary;
             imaginary_end = imaginary_offset + delta_imaginary;
-            printf("\n %lf,%lf,%lf,%d,%lf,%lf,%d",
-                   real_offset, real_end, delta_real,n_real,
-                   imaginary_offset, imaginary_end,n_imaginary);
+            //printf("\n %lf,%lf,%lf,%d,%lf,%lf,%d",
+            //       real_offset, real_end, delta_real,n_real,
+             //      imaginary_offset, imaginary_end,n_imaginary);
             sprintf(buffer, "%d %d %d %lf,%lf,%d,%lf,%lf,%d", image_number, r_start, i_start, real_offset, real_end,
                     n_real, imaginary_offset, imaginary_end, n_imaginary);
             int len = sizeof(struct sockaddr_un);
             sendto(sockfd, (const char *) buffer, strlen(buffer),
                    MSG_CONFIRM, (const struct sockaddr *) svraddr,
                    len);
-
 
         }
     }
@@ -141,7 +140,7 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
 
     int image_number, n;
     int len = sizeof(struct sockaddr_un);
-    unsigned char buffer[MAXLINE*16];
+    unsigned char buffer[MAXLINE*64];
     rgb_image_t *image;
     image = malloc(sizeof(rgb_image_t));
     image->image_size_x=image_size;
@@ -151,12 +150,12 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
         n = recvfrom(sockfd, (char *) buffer, MAXLINE*16,
                      MSG_WAITALL, (struct sockaddr *) rqst_pkt->uxds_svraddr,
                      &len);
-        printf("\n Data-->");
-        printf("%d,%d,%d,%d %d %d:\n",
-               ((int *) buffer)[0], ((int *) buffer)[1],
-               ((int *) buffer)[2], ((int *) buffer)[3],
-               ((int *) buffer)[4], ((int *) buffer)[5]
-        );
+//        printf("\n Data-->");
+//        printf("%d,%d,%d,%d %d %d:\n",
+//               ((int *) buffer)[0], ((int *) buffer)[1],
+//               ((int *) buffer)[2], ((int *) buffer)[3],
+//               ((int *) buffer)[4], ((int *) buffer)[5]
+//        );
         int image_number, r_start, i_start, n_real, n_imaginary;
         image_number = ((int *) buffer)[0];
         r_start = ((int *) buffer)[1];
@@ -169,12 +168,12 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
             for (int i = 0; i < n_imaginary; i++) {
                // printf("I: %d\nn_imag: %d\n",i,n_imaginary);
                 int pixel_location = (i_start + r) * image_size * 3 + (r_start + i) * 3;
-                printf("%d,",pixel_location);
+                //printf("%d,",pixel_location);
                 image->image_data[pixel_location + 0] = buffer[pkt_counter++];
                 image->image_data[pixel_location + 1] = buffer[pkt_counter++];
                 image->image_data[pixel_location + 2] = buffer[pkt_counter++];
             }
-            printf("\nexpected:%d\n",expected_number);
+            //printf("\nexpected:%d\n",expected_number);
         }
     expected_number--;
     }
@@ -210,32 +209,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
        know is a pointer to our arguments structure. */
     struct arguments *arguments = state->input;
     switch (key)
-    {
-        // Memory allocated to copy over arg without the '=' sign.
-        char centDest[5],scaleDest[5],realDest[5],imagDest[5];
-        case 'c':
-            memcpy( centDest, &arg[1], 5 );
-            arguments->center = atof(centDest);
+    {     case 'r':
+        {
+             arguments->real = atof (arg);
+
             break;
-        case 's':
-            memcpy( scaleDest, &arg[1], 5 );
-            arguments->scale = atof(scaleDest);
-            break;
-        case 'r':
-            memcpy( realDest, &arg[1], 5 );
-            arguments->center = atof(realDest);
-            break;
+        }
         case 'i':
-            memcpy( imagDest, &arg[1], 5 );
-            arguments->scale = atof(imagDest);
+        {
+            arguments->imaginary = atof (arg);
+
             break;
-        case ARGP_KEY_NO_ARGS:
+        }
+        case 's':
+        {
+            arguments->scale = atof (arg);
             break;
-        case ARGP_KEY_ARG:
-            arguments->arg1 = arg;
-            arguments->strings = &state->argv[state->next];
-            state->next = state->argc;
-            break;
+        }
         default:
             return ARGP_ERR_UNKNOWN;
     }
@@ -250,6 +240,10 @@ struct argp_option options[] =     {
           "scale"},
         { "center", 'c', "NUM", OPTION_ARG_OPTIONAL,
           "center"},
+        { "imaginary", 'i', "NUM", OPTION_ARG_OPTIONAL,
+                "imaginary"},
+        { "real", 'r', "NUM", OPTION_ARG_OPTIONAL,
+                "real"},
         { 0 }
 };
 struct argp argp = { options, parse_opt, 0, 0 };
@@ -257,12 +251,14 @@ struct argp argp = { options, parse_opt, 0, 0 };
 // Driver code
 int main(int argc, char **argv) {
     int sockfd;
-    unsigned char buffer[MAXLINE*24];
+    unsigned char buffer[MAXLINE*64];
     struct sockaddr_in	 servaddr;
     struct arguments arguments;
 
     arguments.scale=1;
     arguments.center=0.2;
+    arguments.real=0;
+    arguments.imaginary=0;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     //printf("\n%f\n",arguments.center);
 
@@ -290,21 +286,22 @@ int main(int argc, char **argv) {
     int n;
     socklen_t len;
 
-    printf("%s\n",rqst_pkt->uxds_svraddr->sun_path);
+    //printf("%s\n",rqst_pkt->uxds_svraddr->sun_path);
 
 
-    complex double center = -0.5+0*I;
+    complex double center = arguments.real+arguments.imaginary*I;
     int image_size = 512;
     //TODO- WHENEVER SWITCHING UDP TYPE, CHANGE FROM INET to UXDS
-    send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,arguments.center,arguments.scale,16,16,image_size,buffer);
-    rgb_image_t  *image = await_responses(sockfd, rqst_pkt,256,image_size);
+    int real_segs = 16;
+    int imaginary_segs = 16;
+    send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,center,arguments.scale,real_segs,imaginary_segs,image_size,buffer);
+    rgb_image_t  *image = await_responses(sockfd, rqst_pkt,real_segs*imaginary_segs,image_size);
     if (isatty(fileno(stdout))) {
         write_rgb_file("test.ppm",image);
     }else {
         write_rgb_pipe(image);
     }
     close(sockfd);
-
     free_rgb_image(image);
     return 0;
 }

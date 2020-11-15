@@ -37,13 +37,11 @@ int main() {
         threadIDs[0]=&tid1;
         threadIDs[1]=&tid2;
         threadIDs[2]=&tid3;
-
-        for (int c = 0; c < 3; c++) {
-            pthread_create(&threadIDs[c], NULL, send_response, (void *) rqst);
+        pthread_create(&threadIDs[0], NULL, send_response, (void *) rqst);
             count++;
-        }
+
         for(int c = 0; c < 3;c++){
-            pthread_join(threadIDs[c],NULL);  // should wait for all threads to terminate.
+            pthread_join(threadIDs[0],NULL);  // should wait for all threads to terminate.
         }
     }
     return 0;

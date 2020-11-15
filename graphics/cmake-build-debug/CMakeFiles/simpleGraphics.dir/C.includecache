@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/spada/CLionProjects/graphics/graphicslibrary.c
-graphicslibrary.h
-/home/spada/CLionProjects/graphics/graphicslibrary.h
-stdio.h
--
-
 /home/spada/CLionProjects/graphics/graphicslibrary.h
 math.h
 -
@@ -20,5 +14,29 @@ stdio.h
 stdlib.h
 -
 string.h
+-
+
+/home/spada/CLionProjects/graphics/main.c
+stdio.h
+-
+unistd.h
+-
+graphicslibrary.h
+/home/spada/CLionProjects/graphics/graphicslibrary.h
+xwindows_utilities.h
+/home/spada/CLionProjects/graphics/xwindows_utilities.h
+
+/home/spada/CLionProjects/graphics/xwindows_utilities.h
+X11/Xutil.h
+-
+X11/Xos.h
+-
+stdlib.h
+-
+math.h
+-
+graphicslibrary.h
+/home/spada/CLionProjects/graphics/graphicslibrary.h
+X11/Xlib.h
 -
 
