@@ -9,6 +9,10 @@
 /home/spada/CLionProjects/UDPServer/UDP_Routines.h
 
 /home/spada/CLionProjects/UDPServer/main.c
+stdio.h
+-
+stdlib.h
+-
 string.h
 -
 sys/types.h

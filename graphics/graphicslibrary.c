@@ -125,10 +125,10 @@ rgb_image_t *gen_ppm_rgb_client(){
             mandelbrot_real_center,
             1.0*mandelbrot_scale);
     FILE *fp = popen(command, "r");
-    // image = get_ppm(fp);
-    //pclose(fp);
-    return read_ppm_rgb_file("/home/spada/CLionProjects/UDPClient/cmake-build-debug/test.ppm");
-    //return image;
+    image = get_ppm(fp);
+    pclose(fp);
+    //return read_ppm_rgb_file("/home/spada/CLionProjects/UDPClient/cmake-build-debug/test.ppm");
+    return image;
 
 }
 

@@ -96,7 +96,7 @@ int open_uxds_server_socket(char * uxds_udp_server_path, struct rqst_udp_pkt * r
 
 void send_requests(int sockfd,const struct sockaddr * svraddr,
                    int image_number,
-                   complex double center,double scale,int real_segs,int imaginary_segs,int n,char * buffer[])
+                   complex double center,double scale,int real_segs,int imaginary_segs,int n,unsigned char * buffer[])
 {
     const double extent = 3.0;
     int n_real = n/real_segs;           // n needs to be multiple of real_segs
@@ -141,15 +141,13 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
 
     int image_number, n;
     int len = sizeof(struct sockaddr_un);
-    unsigned char buffer[MAXLINE*20];
+    unsigned char buffer[MAXLINE*16];
     rgb_image_t *image;
     image = malloc(sizeof(rgb_image_t));
     image->image_size_x=image_size;
     image->image_size_y=image_size;
     image->image_data = malloc(image->image_size_x * image->image_size_y * 3);
-
-
-    while (expected_number-- > 0) {
+    while (expected_number > 0) {
         n = recvfrom(sockfd, (char *) buffer, MAXLINE*16,
                      MSG_WAITALL, (struct sockaddr *) rqst_pkt->uxds_svraddr,
                      &len);
@@ -167,23 +165,19 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
         n_imaginary = ((int *) buffer)[4];
         int pkt_counter = 6 * sizeof(int); // first byte after header
         for (int r = 0; r < n_real; r++) {
+            //printf("R: %d\nn_real: %d\n",r,n_real);
             for (int i = 0; i < n_imaginary; i++) {
-
+               // printf("I: %d\nn_imag: %d\n",i,n_imaginary);
                 int pixel_location = (i_start + r) * image_size * 3 + (r_start + i) * 3;
                 printf("%d,",pixel_location);
                 image->image_data[pixel_location + 0] = buffer[pkt_counter++];
                 image->image_data[pixel_location + 1] = buffer[pkt_counter++];
                 image->image_data[pixel_location + 2] = buffer[pkt_counter++];
-
             }
             printf("\nexpected:%d\n",expected_number);
         }
-
+    expected_number--;
     }
-    free(*buffer);
-    char filename[] = "test.ppm";
-    //write_rgb_file(filename,image);
-    //write_rgb_pipe(image);
     return image;
     // this could return the populated rgb image..
 }
@@ -263,7 +257,7 @@ struct argp argp = { options, parse_opt, 0, 0 };
 // Driver code
 int main(int argc, char **argv) {
     int sockfd;
-    char buffer[MAXLINE*24];
+    unsigned char buffer[MAXLINE*24];
     struct sockaddr_in	 servaddr;
     struct arguments arguments;
 
@@ -289,7 +283,7 @@ int main(int argc, char **argv) {
     struct rqst_udp_pkt * rqst_pkt= make_rqst();
 
     sockfd=open_uxds_server_socket("/tmp/UDSDGSRV",rqst_pkt);
-    //TODO - open server socket given request packet, send request
+    //TODO - open server socket given request packet, send request  -CHECK
     sockfd=open_inet_server_socket(PORT,rqst_pkt);
     // TODO - IMPLEMENT SEND REQUEST
 
@@ -301,6 +295,7 @@ int main(int argc, char **argv) {
 
     complex double center = -0.5+0*I;
     int image_size = 512;
+    //TODO- WHENEVER SWITCHING UDP TYPE, CHANGE FROM INET to UXDS
     send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,arguments.center,arguments.scale,16,16,image_size,buffer);
     rgb_image_t  *image = await_responses(sockfd, rqst_pkt,256,image_size);
     close(sockfd);
