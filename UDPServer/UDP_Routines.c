@@ -40,7 +40,13 @@ void *send_response(void  *rqst){
     double complex min = real_offset + imaginary_offset * 1i;
     double complex max = real_end + imaginary_end * 1i;
 
+    //CALCULATE PORTION OF IMAGE
     rgb_image_t *image= calculate_mandelbrot2(min,max,n_real,n_imaginary,512);
+//    if (isatty(fileno(stdout))) {
+//        write_rgb_file("test.ppm",image);
+//    }else {
+//        write_rgb_pipe(image);
+//    }
 
     // Note: In our multi-threaded server we need unique buffers for each thread so need to malloc
 

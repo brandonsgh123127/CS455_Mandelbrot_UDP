@@ -96,12 +96,11 @@ int open_uxds_server_socket(char * uxds_udp_server_path, struct rqst_udp_pkt * r
 
 void send_requests(int sockfd,const struct sockaddr * svraddr,
                    int image_number,
-                   complex double center,double scale,int real_segs,int imaginary_segs,int n)
+                   complex double center,double scale,int real_segs,int imaginary_segs,int n,char * buffer[])
 {
     const double extent = 3.0;
     int n_real = n/real_segs;           // n needs to be multiple of real_segs
     int n_imaginary = n/imaginary_segs; // n needs to be multiple of imaginary_segs
-    char buffer[128];
     const double delta_real = extent/(1.0*real_segs*scale);
     const double delta_imaginary = extent/(1.0*imaginary_segs*scale);
     const double start_real = creal(center)-extent/(2.*scale);
@@ -141,9 +140,8 @@ void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_numb
     // if time_out request resend... this should not happen on a single machine
 
     int image_number, n;
-    unsigned char buffer[MAXLINE*16];  //16K
     int len = sizeof(struct sockaddr_un);
-
+    unsigned char buffer[MAXLINE*16];
     rgb_image_t *image;
     image = malloc(sizeof(rgb_image_t));
     image->image_size_x=image_size;
@@ -182,10 +180,10 @@ void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_numb
         }
 
     }
-
+    free(*buffer);
     char filename[] = "test.ppm";
     write_rgb_file(filename,image);
-
+    write_rgb_pipe(image);
     free_rgb_image(image);
 
     // this could return the populated rgb image..
@@ -270,7 +268,7 @@ struct argp argp = { options, parse_opt, 0, 0 };
 // Driver code
 int main(int argc, char **argv) {
     int sockfd;
-    char buffer[MAXLINE];
+    char buffer[MAXLINE*24];
     char *hello = "Mandy send request";
     struct sockaddr_in	 servaddr;
     struct arguments arguments;
@@ -281,6 +279,7 @@ int main(int argc, char **argv) {
     arguments.imaginary=0.0;
 
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
+    //printf("\n%f\n",arguments.center);
 
     // Creating socket file descriptor
     if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -302,7 +301,6 @@ int main(int argc, char **argv) {
     //TODO - open server socket given request packet, send request
     //sockfd=open_inet_server_socket(PORT,rqst_pkt);
     // TODO - IMPLEMENT SEND REQUEST
-    //send_requests(sockfd,&servaddr,4,arguments.center,arguments.scale,4,4,12);
 
     int n;
     socklen_t len;
@@ -312,10 +310,8 @@ int main(int argc, char **argv) {
 
     complex double center = -0.5+0*I;
     int image_size = 512;
-
-    send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,10,arguments.center,arguments.scale,16,16,image_size);
+    send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,0,arguments.center,arguments.scale,16,16,image_size,buffer);
     await_responses(sockfd, rqst_pkt,64*4,image_size);
-
     close(sockfd);
 
     return 0;
