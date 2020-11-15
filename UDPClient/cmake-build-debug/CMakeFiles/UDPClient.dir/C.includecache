@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/spada/CLionProjects/UDPClient/main.c
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+sys/un.h
+-
+complex.h
+-
+graphicslibrary.h
+/home/spada/CLionProjects/UDPClient/graphicslibrary.h
+
+/home/spada/CLionProjects/graphics/graphicslibrary.h
+math.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+

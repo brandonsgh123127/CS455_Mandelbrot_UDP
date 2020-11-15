@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmandelbrot_lib.a  CMakeFiles/mandelbrot_lib.dir/mandelbrot.c.o
+/usr/bin/ranlib libmandelbrot_lib.a

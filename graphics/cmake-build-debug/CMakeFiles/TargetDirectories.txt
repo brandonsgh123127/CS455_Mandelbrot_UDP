@@ -1,0 +1,4 @@
+/home/spada/CLionProjects/graphics/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/spada/CLionProjects/graphics/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/spada/CLionProjects/graphics/cmake-build-debug/CMakeFiles/simpleGraphics.dir
+/home/spada/CLionProjects/graphics/cmake-build-debug/CMakeFiles/graphics.dir

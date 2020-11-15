@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/UDPClient.dir/main.c.o  -o UDPClient  /home/spada/CLionProjects/graphics/cmake-build-debug/libgraphics.a -lm 

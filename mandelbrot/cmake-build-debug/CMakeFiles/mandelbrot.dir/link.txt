@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/mandelbrot.dir/main.c.o CMakeFiles/mandelbrot.dir/mandelbrot.c.o  -o mandelbrot  -lm /home/spada/CLionProjects/graphics/cmake-build-debug/libgraphics.a 

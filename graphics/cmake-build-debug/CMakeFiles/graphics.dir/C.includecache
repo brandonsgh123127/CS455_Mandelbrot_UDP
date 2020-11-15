@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/spada/CLionProjects/graphics/graphicslibrary.c
+graphicslibrary.h
+/home/spada/CLionProjects/graphics/graphicslibrary.h
+stdio.h
+-
+
+/home/spada/CLionProjects/graphics/graphicslibrary.h
+math.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+

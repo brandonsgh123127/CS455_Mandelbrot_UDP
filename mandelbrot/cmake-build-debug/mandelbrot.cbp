@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="mandelbrot"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mandelbrot_lib">
+				<Option output="/home/spada/CLionProjects/mandelbrot/cmake-build-debug/libmandelbrot_lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/spada/CLionProjects/graphics"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 mandelbrot_lib"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mandelbrot_lib/fast">
+				<Option output="/home/spada/CLionProjects/mandelbrot/cmake-build-debug/libmandelbrot_lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/spada/CLionProjects/graphics"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 mandelbrot_lib/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mandelbrot">
+				<Option output="/home/spada/CLionProjects/mandelbrot/cmake-build-debug/mandelbrot" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/spada/CLionProjects/graphics"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 mandelbrot"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mandelbrot/fast">
+				<Option output="/home/spada/CLionProjects/mandelbrot/cmake-build-debug/mandelbrot" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/spada/CLionProjects/mandelbrot/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/spada/CLionProjects/graphics"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 mandelbrot/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/spada/CLionProjects/mandelbrot/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/spada/CLionProjects/mandelbrot/main.c">
+			<Option target="mandelbrot"/>
+		</Unit>
+		<Unit filename="/home/spada/CLionProjects/mandelbrot/mandelbrot.c">
+			<Option target="mandelbrot_lib"/>
+			<Option target="mandelbrot"/>
+		</Unit>
+		<Unit filename="/home/spada/CLionProjects/mandelbrot/mandelbrot.h">
+			<Option target="mandelbrot_lib"/>
+			<Option target="mandelbrot"/>
+		</Unit>
+		<Unit filename="/home/spada/CLionProjects/mandelbrot/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
