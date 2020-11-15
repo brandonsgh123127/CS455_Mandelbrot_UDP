@@ -40,7 +40,7 @@ int open_inet_server_socket(int port, struct rqst_udp_pkt * rqst_pkt)
     int sockfd;
     struct sockaddr_in	 servaddr;
     // Creating socket file descriptor
-    if ( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
@@ -133,7 +133,7 @@ void send_requests(int sockfd,const struct sockaddr * svraddr,
         }
     }
 }
-void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_number,int image_size) {
+rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_number,int image_size) {
     // expected image number
     // dump all packets which are not expected
     // we know how many packets for a completed image wait for those
@@ -141,7 +141,7 @@ void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_numb
 
     int image_number, n;
     int len = sizeof(struct sockaddr_un);
-    unsigned char buffer[MAXLINE*16];
+    unsigned char buffer[MAXLINE*20];
     rgb_image_t *image;
     image = malloc(sizeof(rgb_image_t));
     image->image_size_x=image_size;
@@ -176,16 +176,15 @@ void await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_numb
                 image->image_data[pixel_location + 2] = buffer[pkt_counter++];
 
             }
-            printf("\n");
+            printf("\nexpected:%d\n",expected_number);
         }
 
     }
     free(*buffer);
     char filename[] = "test.ppm";
-    write_rgb_file(filename,image);
-    write_rgb_pipe(image);
-    free_rgb_image(image);
-
+    //write_rgb_file(filename,image);
+    //write_rgb_pipe(image);
+    return image;
     // this could return the populated rgb image..
 }
 
@@ -253,14 +252,10 @@ double mandelbrot_scale = 1.0;
 double mandelbrot_imaginary_center = 0.0;
 double mandelbrot_real_center = 0.0;
 struct argp_option options[] =     {
-        { "real", 'r', "NUM", OPTION_ARG_OPTIONAL,
-          "real center"},
         { "scale", 's', "NUM", OPTION_ARG_OPTIONAL,
           "scale"},
         { "center", 'c', "NUM", OPTION_ARG_OPTIONAL,
           "center"},
-        { "imaginary", 'i', "NUM", OPTION_ARG_OPTIONAL,
-          "imaginary"},
         { 0 }
 };
 struct argp argp = { options, parse_opt, 0, 0 };
@@ -269,15 +264,11 @@ struct argp argp = { options, parse_opt, 0, 0 };
 int main(int argc, char **argv) {
     int sockfd;
     char buffer[MAXLINE*24];
-    char *hello = "Mandy send request";
     struct sockaddr_in	 servaddr;
     struct arguments arguments;
 
     arguments.scale=1;
     arguments.center=0.2;
-    arguments.real=0;
-    arguments.imaginary=0.0;
-
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     //printf("\n%f\n",arguments.center);
 
@@ -299,7 +290,7 @@ int main(int argc, char **argv) {
 
     sockfd=open_uxds_server_socket("/tmp/UDSDGSRV",rqst_pkt);
     //TODO - open server socket given request packet, send request
-    //sockfd=open_inet_server_socket(PORT,rqst_pkt);
+    sockfd=open_inet_server_socket(PORT,rqst_pkt);
     // TODO - IMPLEMENT SEND REQUEST
 
     int n;
@@ -310,9 +301,14 @@ int main(int argc, char **argv) {
 
     complex double center = -0.5+0*I;
     int image_size = 512;
-    send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,0,arguments.center,arguments.scale,16,16,image_size,buffer);
-    await_responses(sockfd, rqst_pkt,64*4,image_size);
+    send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,arguments.center,arguments.scale,16,16,image_size,buffer);
+    rgb_image_t  *image = await_responses(sockfd, rqst_pkt,256,image_size);
     close(sockfd);
-
+    if (isatty(fileno(stdout))) {
+        write_rgb_file("test.ppm",image);
+    }else {
+        write_rgb_pipe(image);
+    }
+    free_rgb_image(image);
     return 0;
 }

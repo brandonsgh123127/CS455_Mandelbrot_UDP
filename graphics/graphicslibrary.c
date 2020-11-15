@@ -64,7 +64,7 @@ void write_rgb_pipe(rgb_image_t *image)
     FILE *fp = stdout;/* b - binary mode */
     fprintf(fp, "P6\n%d %d\n255\n", image->image_size_x, image->image_size_y);
     im_ptr =0;
-    for (j = 0; j < image->image_size_y; ++j) {
+    for (j = 0; j < image->image_size_x; ++j) {
         for (i = 0; i < image->image_size_y; ++i) {
             static unsigned char color[3];
             color[0] = image->image_data[im_ptr++];  /* red */
@@ -125,10 +125,10 @@ rgb_image_t *gen_ppm_rgb_client(){
             mandelbrot_real_center,
             1.0*mandelbrot_scale);
     FILE *fp = popen(command, "r");
-//    image = get_ppm(fp);
-//    pclose(fp);
-    image = read_ppm_rgb_file("/home/spada/CLionProjects/UDPClient/cmake-build-debug/test.ppm");
-    return image;
+    // image = get_ppm(fp);
+    //pclose(fp);
+    return read_ppm_rgb_file("/home/spada/CLionProjects/UDPClient/cmake-build-debug/test.ppm");
+    //return image;
 
 }
 

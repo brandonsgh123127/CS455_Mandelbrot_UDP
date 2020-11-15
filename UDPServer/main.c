@@ -25,7 +25,7 @@ int main() {
 
     pthread_t tid;
     gsockfd=open_inet_udp_socket(PORT);
-    gsockfd=open_uxds_udp_socket();
+    open_uxds_udp_socket();
 
     while (1) {
         //  await request

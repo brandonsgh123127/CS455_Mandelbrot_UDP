@@ -42,11 +42,7 @@ void *send_response(void  *rqst){
 
     //CALCULATE PORTION OF IMAGE
     rgb_image_t *image= calculate_mandelbrot2(min,max,n_real,n_imaginary,512);
-//    if (isatty(fileno(stdout))) {
-//        write_rgb_file("test.ppm",image);
-//    }else {
-//        write_rgb_pipe(image);
-//    }
+
 
     // Note: In our multi-threaded server we need unique buffers for each thread so need to malloc
 
@@ -100,7 +96,7 @@ int open_inet_udp_socket(unsigned short port)
     static int count=0;
     int sockfd;
     // Creating socket file descriptor
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
