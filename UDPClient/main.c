@@ -40,7 +40,7 @@ int open_inet_server_socket(int port, struct rqst_udp_pkt * rqst_pkt)
     int sockfd;
     struct sockaddr_in	 servaddr;
     // Creating socket file descriptor
-    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+    if ( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
@@ -49,8 +49,14 @@ int open_inet_server_socket(int port, struct rqst_udp_pkt * rqst_pkt)
 
     // Filling server information
     rqst_pkt->inet_svraddr->sin_family = AF_INET;
-    rqst_pkt->inet_svraddr->sin_port = htons(PORT);
-    rqst_pkt->inet_svraddr->sin_addr.s_addr = INADDR_ANY;
+    rqst_pkt->inet_svraddr->sin_port = htons(port);
+    rqst_pkt->inet_svraddr->sin_addr.s_addr = htonl(INADDR_ANY);
+    if (connect(sockfd, (struct sockaddr*) (* rqst_pkt).inet_svraddr, sizeof(struct sockaddr_in)) < 0){
+        perror("Cannot connect to server!");
+        exit(-1);
+    }
+
+    return sockfd;
 
 }
 
@@ -202,7 +208,7 @@ static struct arguments
     char *arg1;                   /* arg1 */
     char **strings;               /* [string…] */
     double center;
-    double scale;      /* vals of args*/
+    double scale,real,imaginary;      /* vals of args*/
 };
 
 static error_t
@@ -215,7 +221,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
     switch (key)
     {
         // Memory allocated to copy over arg without the '=' sign.
-        char centDest[5],scaleDest[5];
+        char centDest[5],scaleDest[5],realDest[5],imagDest[5];
         case 'c':
             memcpy( centDest, &arg[1], 5 );
             arguments->center = atof(centDest);
@@ -223,6 +229,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
         case 's':
             memcpy( scaleDest, &arg[1], 5 );
             arguments->scale = atof(scaleDest);
+            break;
+        case 'r':
+            memcpy( realDest, &arg[1], 5 );
+            arguments->center = atof(realDest);
+            break;
+        case 'i':
+            memcpy( imagDest, &arg[1], 5 );
+            arguments->scale = atof(imagDest);
             break;
         case ARGP_KEY_NO_ARGS:
             break;
@@ -245,6 +259,10 @@ struct argp_option options[] =     {
           "real center"},
         { "scale", 's', "NUM", OPTION_ARG_OPTIONAL,
           "scale"},
+        { "center", 'c', "NUM", OPTION_ARG_OPTIONAL,
+          "center"},
+        { "imaginary", 'i', "NUM", OPTION_ARG_OPTIONAL,
+          "imaginary"},
         { 0 }
 };
 struct argp argp = { options, parse_opt, 0, 0 };
@@ -253,12 +271,15 @@ struct argp argp = { options, parse_opt, 0, 0 };
 int main(int argc, char **argv) {
     int sockfd;
     char buffer[MAXLINE];
-    char *hello = "No";
+    char *hello = "Mandy send request";
     struct sockaddr_in	 servaddr;
     struct arguments arguments;
 
     arguments.scale=1;
     arguments.center=0.2;
+    arguments.real=0;
+    arguments.imaginary=0.0;
+
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     // Creating socket file descriptor
@@ -278,9 +299,10 @@ int main(int argc, char **argv) {
     struct rqst_udp_pkt * rqst_pkt= make_rqst();
 
     sockfd=open_uxds_server_socket("/tmp/UDSDGSRV",rqst_pkt);
-    // sockfd=open_inet_server_socket(PORT,rqst_pkt); todo
-
-    // send_requst(real_min,real_max..... )
+    //TODO - open server socket given request packet, send request
+    //sockfd=open_inet_server_socket(PORT,rqst_pkt);
+    // TODO - IMPLEMENT SEND REQUEST
+    //send_requests(sockfd,&servaddr,4,arguments.center,arguments.scale,4,4,12);
 
     int n;
     socklen_t len;
@@ -291,7 +313,7 @@ int main(int argc, char **argv) {
     complex double center = -0.5+0*I;
     int image_size = 512;
 
-    send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,10,center,2.0,16,16,image_size);
+    send_requests(sockfd,(struct sockaddr *) rqst_pkt->uxds_svraddr,10,arguments.center,arguments.scale,16,16,image_size);
     await_responses(sockfd, rqst_pkt,64*4,image_size);
 
     close(sockfd);

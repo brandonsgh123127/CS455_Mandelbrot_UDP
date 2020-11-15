@@ -94,7 +94,7 @@ int open_inet_udp_socket(unsigned short port)
     static int count=0;
     int sockfd;
     // Creating socket file descriptor
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
@@ -113,6 +113,8 @@ int open_inet_udp_socket(unsigned short port)
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
+
+
     return sockfd;
 }
 

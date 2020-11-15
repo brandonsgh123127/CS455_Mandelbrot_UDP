@@ -24,7 +24,7 @@ int main() {
     static int count=0;
 
     pthread_t tid;
-    //gsockfd=open_inet_udp_socket(PORT);
+    gsockfd=open_inet_udp_socket(PORT);
     gsockfd=open_uxds_udp_socket();
 
     while (1) {
