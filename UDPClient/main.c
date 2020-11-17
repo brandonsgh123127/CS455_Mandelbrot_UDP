@@ -149,10 +149,9 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
     while (expected_number > 0) {
         struct timeval tv;
         tv.tv_sec = 0;
-        tv.tv_usec = 1000;
+        tv.tv_usec = 10000;
         if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
             perror("Error");
-            await_responses(sockfd,rqst_pkt,expected_number,image_size,image_number);
             break;
         }
         n = recvfrom(sockfd, (char *) buffer, MAXLINE*16,
