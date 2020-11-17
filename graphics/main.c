@@ -3,9 +3,9 @@
 #include "graphicslibrary.h"
 #include "xwindows_utilities.h"
 
- double mandelbrot_real_center = -0.5;
- double mandelbrot_imaginary_center=0.0;
- double mandelbrot_scale = 1.0;
+ extern double mandelbrot_real_center = -0.5;
+ extern double mandelbrot_imaginary_center=0.0;
+ extern double mandelbrot_scale = 1.0;
  const double mandelbrot_radius = 1.5;
 
 struct rgb_image img;
@@ -45,8 +45,10 @@ int main () {
 
         printf("Real: %f, Imaginary: %f, Scale: %f\n",mandelbrot_real_center,mandelbrot_imaginary_center,mandelbrot_scale);
         // here we will popen mandelbrot to get a new image
-        image = read_ppm_rgb_mandy();
-        //image= read_ppm_rgb_pipe(image);
+        /*REFORMATTING FOR USE WITH CLIENT AND HOST SERVER*/
+         //image = read_ppm_rgb_mandy();
+
+        (mouse_event.button==mouse_left_button)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_forward)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_scroll_backward)?image=gen_ppm_rgb_client():(mouse_event.button==mouse_right_button)?image=gen_ppm_rgb_client():perror("Unable to open client!");
 
         display_image(image);
         //write_rgb_file("Mandy.ppm", image);

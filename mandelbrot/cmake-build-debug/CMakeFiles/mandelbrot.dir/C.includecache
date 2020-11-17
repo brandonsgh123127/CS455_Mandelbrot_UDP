@@ -28,6 +28,12 @@ graphicslibrary.h
 mandelbrot.h
 /home/spada/CLionProjects/mandelbrot/mandelbrot.h
 
+/home/spada/CLionProjects/mandelbrot/mandelbrot.c
+graphicslibrary.h
+/home/spada/CLionProjects/mandelbrot/graphicslibrary.h
+mandelbrot.h
+/home/spada/CLionProjects/mandelbrot/mandelbrot.h
+
 /home/spada/CLionProjects/mandelbrot/mandelbrot.h
 complex.h
 -

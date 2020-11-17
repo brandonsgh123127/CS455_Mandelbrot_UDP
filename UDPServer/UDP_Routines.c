@@ -40,7 +40,9 @@ void *send_response(void  *rqst){
     double complex min = real_offset + imaginary_offset * 1i;
     double complex max = real_end + imaginary_end * 1i;
 
+    //CALCULATE PORTION OF IMAGE
     rgb_image_t *image= calculate_mandelbrot2(min,max,n_real,n_imaginary,512);
+
 
     // Note: In our multi-threaded server we need unique buffers for each thread so need to malloc
 
@@ -56,8 +58,8 @@ void *send_response(void  *rqst){
 
 
     sendto(gsockfd, pkt_data,n_real*n_imaginary*3+header_size*sizeof(int) ,
-           MSG_CONFIRM, (const struct sockaddr *) ((struct rqst_udp_pkt *)rqst)->uxds_cliaddr,
-           ((struct rqst_udp_pkt *)rqst)->uxds_len);
+           MSG_CONFIRM, (const struct sockaddr *) ((struct rqst_udp_pkt *)rqst)->inet_cliaddr,
+           ((struct rqst_udp_pkt *)rqst)->inet_len);
 
     free(pkt_data);
     free_rgb_image(image);
@@ -69,8 +71,8 @@ void await_request(struct rqst_udp_pkt * rqst)
 
     int n;
     n = recvfrom(gsockfd, (char *)rqst->rqst_data, MAXLINE,
-                 MSG_WAITALL, ( struct sockaddr *) rqst->uxds_cliaddr,
-                 &(rqst->uxds_len));
+                 MSG_WAITALL, ( struct sockaddr *) rqst->inet_cliaddr,
+                 &(rqst->inet_len));
     rqst->rqst_data[n] = '\0';
 
 }
@@ -113,6 +115,8 @@ int open_inet_udp_socket(unsigned short port)
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
+
+
     return sockfd;
 }
 
