@@ -25,6 +25,8 @@ graphicslibrary.h
 /home/spada/CLionProjects/graphics/graphicslibrary.h
 xwindows_utilities.h
 /home/spada/CLionProjects/graphics/xwindows_utilities.h
+sys/wait.h
+-
 
 /home/spada/CLionProjects/graphics/xwindows_utilities.h
 X11/Xutil.h
