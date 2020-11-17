@@ -21,13 +21,6 @@
 extern int gsockfd;
 
 void *send_response(void  *rqst){
-    char *hello = (char *)malloc(40);
-
-    // ToDo
-    // The request will have the region of interest
-    // calc mandy of the region get the RGB and send it back.
-
-  //  send the rgb_image_t data in the packet
 
     int image_number,n_real,n_imaginary,r_start,i_start;
     double real_offset,real_end,imaginary_offset,imaginary_end;

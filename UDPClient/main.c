@@ -132,13 +132,13 @@ void send_requests(int sockfd,const struct sockaddr * svraddr,
         }
     }
 }
-rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_number,int image_size) {
+rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expected_number,int image_size,int image_number) {
     // expected image number
     // dump all packets which are not expected
     // we know how many packets for a completed image wait for those
     // if time_out request resend... this should not happen on a single machine
 
-    int image_number, n;
+    int n;
     int len = sizeof(struct sockaddr_un);
     unsigned char buffer[MAXLINE*64];
     rgb_image_t *image;
@@ -147,8 +147,16 @@ rgb_image_t * await_responses(int sockfd,struct rqst_udp_pkt * rqst_pkt,int expe
     image->image_size_y=image_size;
     image->image_data = malloc(image->image_size_x * image->image_size_y * 3);
     while (expected_number > 0) {
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 1000;
+        if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+            perror("Error");
+            await_responses(sockfd,rqst_pkt,expected_number,image_size,image_number);
+            break;
+        }
         n = recvfrom(sockfd, (char *) buffer, MAXLINE*16,
-                     MSG_WAITALL, (struct sockaddr *) rqst_pkt->uxds_svraddr,
+                     MSG_TRUNC, (struct sockaddr *) rqst_pkt->uxds_svraddr,
                      &len);
 //        printf("\n Data-->");
 //        printf("%d,%d,%d,%d %d %d:\n",
@@ -277,11 +285,9 @@ int main(int argc, char **argv) {
 
 
     struct rqst_udp_pkt * rqst_pkt= make_rqst();
-
+    //TODO - CHANGE FROM UXDS TO INET HERE
     sockfd=open_uxds_server_socket("/tmp/UDSDGSRV",rqst_pkt);
-    //TODO - open server socket given request packet, send request  -CHECK
     sockfd=open_inet_server_socket(PORT,rqst_pkt);
-    // TODO - IMPLEMENT SEND REQUEST
 
     int n;
     socklen_t len;
@@ -295,7 +301,7 @@ int main(int argc, char **argv) {
     int real_segs = 16;
     int imaginary_segs = 16;
     send_requests(sockfd,(struct sockaddr *) rqst_pkt->inet_svraddr,2,center,arguments.scale,real_segs,imaginary_segs,image_size,buffer);
-    rgb_image_t  *image = await_responses(sockfd, rqst_pkt,real_segs*imaginary_segs,image_size);
+    rgb_image_t  *image = await_responses(sockfd, rqst_pkt,real_segs*imaginary_segs,image_size,2);
     if (isatty(fileno(stdout))) {
         write_rgb_file("test.ppm",image);
     }else {
